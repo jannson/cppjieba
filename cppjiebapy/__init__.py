@@ -7,13 +7,20 @@ from functools import wraps
 
 import mixsegment
 
+try:
+    import whoosh
+    from analyzer import ChineseAnalyzer, Tokenize
+except ImportError:
+    # install whoosh to using ChineseAnalyzer
+    pass
+
 SEG_LOCK = threading.RLock()
 SEG_INIT = False
 segment_wrapper = None
 
-
+# copy some codes from http://github.com/jannson/yaha
 def get_sentence_dict():
-    cutlist = " .[。，,！……!《》<>\"':：？\?、\|“”‘’；]{}（）{}【】()｛｝（）：？！。，;、~——+％%`:“”＂'‘\n\r"
+    cutlist = " .[。，,！……!《》<>\"':：？\?、\|\\/“”‘’；]{}（）{}【】()｛｝（）：？！。，;、~——+％%`:“”＂'‘\n\r"
     if not isinstance(cutlist, unicode):
         cutlist = cutlist.decode('utf-8')
     cutlist_dict = []
@@ -51,7 +58,8 @@ class SegmentWrapper(object):
                         yield (str, True)
             else:
                 yield (s, False)
-    
+
+    #Support for regex 
     def do_stage1(self, sentence):
         start = 0
         for m in self.stage1_regex.finditer(sentence):

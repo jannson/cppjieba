@@ -43,7 +43,7 @@ using namespace CppJieba;
 int mix_segment_init(char* jieba_dic, char* hmm_model)
 {
 	MixSegment &seg = GMIXSEG;
-	if(!seg.init("../dicts/jieba.dict.utf8", "../dicts/hmm_model.utf8"))
+	if(!seg.init(jieba_dic, hmm_model))
 	{
 		cout<<"seg init failed."<<endl;
 		return EXIT_FAILURE;

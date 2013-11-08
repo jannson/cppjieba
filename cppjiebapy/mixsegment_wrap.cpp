@@ -7098,6 +7098,18 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_mix_segment_dispose(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  
+  if (!PyArg_ParseTuple(args,(char *)":mix_segment_dispose")) SWIG_fail;
+  mix_segment_dispose();
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 static PyMethodDef SwigMethods[] = {
 	 { (char *)"SWIG_PyInstanceMethod_New", (PyCFunction)SWIG_PyInstanceMethod_New, METH_O, NULL},
 	 { (char *)"delete_SwigPyIterator", _wrap_delete_SwigPyIterator, METH_VARARGS, NULL},
@@ -7154,6 +7166,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"StringVector_swigregister", StringVector_swigregister, METH_VARARGS, NULL},
 	 { (char *)"mix_segment_init", _wrap_mix_segment_init, METH_VARARGS, NULL},
 	 { (char *)"mix_segment_cut", _wrap_mix_segment_cut, METH_VARARGS, NULL},
+	 { (char *)"mix_segment_dispose", _wrap_mix_segment_dispose, METH_VARARGS, NULL},
 	 { NULL, NULL, 0, NULL }
 };
 

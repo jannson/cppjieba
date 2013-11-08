@@ -31,10 +31,15 @@ cat install_manifest.txt | sudo xargs rm -rf
 ### 使用Python调用CppJieba方法
 
 安装swig
+
 用上述方法编译cppjieba的C++模块
+
 安装CppJiebaPy模块： python setup.py install
-调用： import cppjiebapy
+
+调用方法： import cppjiebapy; cppjiebapy.cut
+
 更多请看：CppJiebaPy/README test/test_whoosh.py 
+
 
 ### 验证
 

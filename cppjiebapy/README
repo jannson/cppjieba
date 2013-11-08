@@ -1,11 +1,17 @@
 
 
-实现Python对CppJieba的调用
+借用swig实现Python对CppJieba的调用，没有使用Py++对整个库进行支持。
+
+因为懒，所以目前只支持了MixSegment的模式，要支持其它模式也不难。
+
+只支持精确分词模式
 
 只在Linux下完成测试
 
 
 #TODO
+
+完整支持？
 
 合并到Master分支
 

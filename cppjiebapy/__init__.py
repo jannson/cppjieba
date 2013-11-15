@@ -20,7 +20,7 @@ segment_wrapper = None
 
 # copy some codes from http://github.com/jannson/yaha
 def get_sentence_dict():
-    cutlist = " .[。，,！……!《》<>\"':：？\?、\|\\/“”‘’；]{}（）{}【】()｛｝（）：？！。，;、~——+％%`:“”＂'‘\n\r"
+    cutlist = "\s.[。，,！……!《》<>\"':：？\?、\|\\/“”‘’；]{}（）{}【】()｛｝（）：？！。，;、~——+％%`:“”＂'‘\n\r"
     if not isinstance(cutlist, unicode):
         cutlist = cutlist.decode('utf-8')
     cutlist_dict = []
@@ -105,3 +105,17 @@ def cut(str):
     for s in segment_wrapper.cut(str):
         yield s
 
+cut_list = frozenset(u".。！!?；？！。，;")
+def cut_sentence(txt):
+    if not isinstance(txt, unicode):
+        txt = txt.decode('utf-8')
+    str = ''
+    for c in txt:
+        if c in cut_list:
+            if str != '':
+                yield str
+            str = ''
+        else:
+            str += c
+    if str != '':
+        yield str

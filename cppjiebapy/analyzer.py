@@ -22,7 +22,7 @@ def __init_stop_words():
 __init_stop_words()
 
 accepted_chars = re.compile(ur"[\u4E00-\u9FA5]+")
-ignore_numbers = re.compile(ur"\d+", re.U|re.I|re.M)
+ignore_numbers = re.compile(ur"[\d\s]+", re.U|re.I|re.M)
 
 def tokenize_1(text):
     start = 0

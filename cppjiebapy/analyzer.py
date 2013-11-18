@@ -51,14 +51,37 @@ def ChineseAnalyzer(stoplist=STOP_WORDS,minsize=1,stemfn=stem,cachesize=50000):
             |StemFilter(stemfn=stemfn, ignore=None,cachesize=cachesize)\
             |StopFilter(stoplist=stoplist,minsize=minsize)
 
-
 #Support for gensim tokenize
-analyzer = ChineseAnalyzer()
+def tokenize_2(text):
+    for term in cppjiebapy.cut_type(text):
+        yield (term, 0, 0)
+
+class GensimTokenizer(Tokenizer):
+    def __call__(self,text,**kargs):
+        words = tokenize_2(text)
+        token  = Token()
+        for (w,start_pos,stop_pos) in words:
+            if not accepted_chars.match(w):
+                if len(w) <= 1:
+                    continue
+            token.original = token.text = w
+            token.pos = start_pos
+            token.startchar = start_pos
+            token.endchar = stop_pos
+            yield token
+
+def GensimAnalyzer(stoplist=STOP_WORDS,minsize=1,stemfn=stem,cachesize=50000):
+    return GensimTokenizer()|LowercaseFilter()\
+            |StemFilter(stemfn=stemfn, ignore=None,cachesize=cachesize)\
+            |StopFilter(stoplist=stoplist,minsize=minsize)
+
+gensim_analyzer = GensimAnalyzer()
 def Tokenize(text):
-    for term in analyzer(text):
+    for term in gensim_analyzer(text):
         #ignore the numbers
         if len(term.text) <= 1:
             continue
         if ignore_numbers.match(term.text):
             continue
         yield term.text
+

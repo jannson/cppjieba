@@ -8,7 +8,7 @@ paths = ['./src', './src/Limonp', './src/Husky']
 for p in paths:
     for d in os.listdir(p):
         f = os.path.join(p, d)
-        if os.path.isfile(f) and d.endswith(".cpp") and d != 'server.cpp':
+        if os.path.isfile(f) and d.endswith(".cpp") and d not in ignores:
             sources.append(f)
 
 module_jieba = Extension('_mixsegment',

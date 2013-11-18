@@ -23,6 +23,22 @@ void cut(const ISegment * seg, const char * const filePath)
     }
 }
 
+void cut_type(const MixSegment* seg, const char* const filePath)
+{
+    ifstream ifile(filePath);
+    vector<string> res;
+    string line;
+    while(getline(ifile, line))
+    {
+        if(!line.empty())
+        {
+            res.clear();
+            seg->cut_type(line, res);
+            cout<<join(res.begin(), res.end(),"/")<<endl;
+        }
+    }
+}
+
 int main(int argc, char ** argv)
 {
     //demo
@@ -44,6 +60,9 @@ int main(int argc, char ** argv)
             return EXIT_FAILURE;
         }
         cut(&seg, "testlines.utf8");
+		cout<<"Cut type"<<endl;
+		cut_type(&seg, "testlines.utf8");
+		cout<<endl;
         seg.dispose();
     }
     {

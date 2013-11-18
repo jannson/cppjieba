@@ -36,6 +36,7 @@ using namespace CppJieba;
 	int mix_segment_init(char* jieba_dic, char* hmm_model);
 
 	bool mix_segment_cut(const std::string& str, StringVector& res);
+	bool mix_segment_cut_type(const std::string& str, StringVector& res);
 
 	void mix_segment_dispose();
 //}
@@ -56,6 +57,12 @@ bool mix_segment_cut(const std::string& str, vector<string>& res)
 {
 	MixSegment &seg = GMIXSEG;
 	return seg.cut(str, res);
+}
+
+bool mix_segment_cut_type(const std::string& str, vector<string>& res)
+{
+	MixSegment &seg = GMIXSEG;
+	return seg.cut_type(str, res);
 }
 
 void mix_segment_dispose()

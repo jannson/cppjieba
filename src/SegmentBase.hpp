@@ -1,6 +1,7 @@
 #ifndef CPPJIEBA_SEGMENTBASE_H
 #define CPPJIEBA_SEGMENTBASE_H
 
+#include <assert.h>
 #include "globals.h"
 #include "ISegment.hpp"
 #include "ChineseFilter.hpp"
@@ -22,11 +23,12 @@ namespace CppJieba
             bool _setInitFlag(bool flag){return _isInited = flag;};
             bool cut(const string& str, vector<string>& res)const
             {
-                if(!_getInitFlag())
+                /*if(!_getInitFlag()) TODO use Decorator
                 {
                     LogError("not inited.");
                     return false;
-                }
+                }*/
+				assert(_getInitFlag());
                 ChineseFilter filter;
                 filter.feed(str);
                 for(ChineseFilter::iterator it = filter.begin(); it != filter.end(); it++)

@@ -3,6 +3,7 @@
  * author   : wuyanyi09@gmail.com
 ************************************/
 #include "MPSegment.h"
+#include <assert.h>
 
 namespace CppJieba
 {
@@ -47,11 +48,12 @@ namespace CppJieba
 
     bool MPSegment::cut(Unicode::const_iterator begin, Unicode::const_iterator end, vector<string>& res)const
     {
-        if(!_getInitFlag())
+        /*if(!_getInitFlag()) TODO use Decorator
         {
             LogError("not inited.");
             return false;
-        }
+        }*/
+		assert(_getInitFlag());
         vector<TrieNodeInfo> segWordInfos;
         if(!cut(begin, end, segWordInfos))
         {
@@ -74,11 +76,12 @@ namespace CppJieba
 
     bool MPSegment::cut(Unicode::const_iterator begin , Unicode::const_iterator end, vector<TrieNodeInfo>& segWordInfos)const
     {
-        if(!_getInitFlag())
+        /*if(!_getInitFlag())
         {
             LogError("not inited.");
             return false;
-        }
+        }*/
+		assert(_getInitFlag());
         SegmentContext segContext;
         for(Unicode::const_iterator it = begin; it != end; it++)
         {
@@ -109,11 +112,12 @@ namespace CppJieba
 
     bool MPSegment::cut(const string& str, vector<TrieNodeInfo>& segWordInfos)const
     {
-        if(!_getInitFlag())
+        /*if(!_getInitFlag())
         {
             LogError("not inited.");
             return false;
-        }
+        }*/
+		assert(_getInitFlag());
         if(str.empty())
         {
             return false;

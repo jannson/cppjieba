@@ -9,9 +9,9 @@ from cppjiebapy import ChineseAnalyzer, Tokenize
 #copy this file from jieba project, just for testing
 
 analyzer = ChineseAnalyzer()
-str = u"我的好朋友是李明;我爱北京天安门;IBM和Microsoft/\\/1997;... I have a dream interesting"
+str = u"来这里看看别人正在搜索什么;吧我的好朋友是李明;我爱北京天安门;IBM和Microsoft/\\/1997;... I have a dream interesting"
 for t in analyzer(str):
-    print len(t.text), t.text,
+    print t.text,
 print '\n'
 
 for t in Tokenize(str):

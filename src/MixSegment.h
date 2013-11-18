@@ -22,6 +22,10 @@ namespace CppJieba
             //virtual bool cut(const string& str, vector<string>& res) const;
             bool cut(const string& str, vector<string>& res)const;
             bool cut(Unicode::const_iterator begin, Unicode::const_iterator end, vector<string>& res)const;
+
+			/* TODO do better for this two functions 18/11/13 10:11:13 */
+			bool cut_type(const string& str, vector<string>& res) const;
+			bool cut_type(Unicode::const_iterator begin, Unicode::const_iterator end, vector<string>& res) const;
     };
 }
 

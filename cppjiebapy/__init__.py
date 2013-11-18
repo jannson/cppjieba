@@ -79,6 +79,18 @@ class SegmentWrapper(object):
                     yield s.decode('utf-8')
             else:
                 yield s
+    
+    def cut_type(self, sentence):
+        for s, need_cut in self.cut_to_sentence(sentence):
+            if s == '':
+                continue
+            elif need_cut:
+                segs = mixsegment.StringVector()
+                mixsegment.mix_segment_cut_type(s.encode('utf-8'), segs)
+                for s in segs:
+                    yield s.decode('utf-8')
+            else:
+                yield s
 
     # Auto delete it in c++
     #def __del__(self):
@@ -103,6 +115,11 @@ def require_inited(fn):
 @require_inited
 def cut(str):
     for s in segment_wrapper.cut(str):
+        yield s
+
+@require_inited
+def cut_type(str):
+    for s in segment_wrapper.cut_type(str):
         yield s
 
 cut_list = frozenset(u".。！!?；？！。，;")

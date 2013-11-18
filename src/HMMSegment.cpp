@@ -1,3 +1,4 @@
+#include <assert.h>
 #include "HMMSegment.h"
 
 namespace CppJieba
@@ -107,11 +108,12 @@ namespace CppJieba
 
     bool HMMSegment::cut(Unicode::const_iterator begin, Unicode::const_iterator end, vector<Unicode>& res)const
     {
-        if(!_getInitFlag())
+        /*if(!_getInitFlag()) TODO use Decorator
         {
             LogError("not inited.");
             return false;
-        }
+        }*/
+		assert(_getInitFlag());
         vector<uint> status; 
         if(!_viterbi(begin, end, status))
         {
@@ -140,11 +142,12 @@ namespace CppJieba
 
     bool HMMSegment::cut(Unicode::const_iterator begin, Unicode::const_iterator end, vector<string>& res) const
     {
-        if(!_getInitFlag())
+        /*if(!_getInitFlag()) TODO use Decorator 18/11/13 09:46:26
         {
             LogError("not inited.");
             return false;
-        }
+        }*/
+		assert(_getInitFlag());
         if(begin == end)
         {
             return false;

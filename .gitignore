@@ -15,4 +15,7 @@ tmp
 t.*
 *.pid
 *.pyc
-
+cppjiebapy/dict/hmm_model.utf8
+cppjiebapy/dict/jieba.dict.utf8
+cscope.*
+*build

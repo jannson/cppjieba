@@ -122,7 +122,7 @@ def cut_type(str):
     for s in segment_wrapper.cut_type(str):
         yield s
 
-cut_list = frozenset(u".。！!?；？！。，;")
+cut_list = frozenset(u".。！!?；？！。;")
 def cut_sentence(txt):
     if not isinstance(txt, unicode):
         txt = txt.decode('utf-8')

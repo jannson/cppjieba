@@ -3,27 +3,23 @@
 #include <string>
 #include <ctype.h>
 #include <string.h>
-#include "Limonp/ArgvContext.hpp"
-#include "Husky/Daemon.h"
-#include "Husky/ServerFrame.h"
-#include "MPSegment.h"
-#include "HMMSegment.h"
-#include "MixSegment.h"
+#include "Limonp/Config.hpp"
+#include "Husky/ServerFrame.hpp"
+#include "MPSegment.hpp"
+#include "HMMSegment.hpp"
+#include "MixSegment.hpp"
 
 using namespace Husky;
 using namespace CppJieba;
 
-const char * const DEFAULT_DICTPATH = "../dicts/jieba.dict.utf8";
-const char * const DEFAULT_MODELPATH = "../dicts/hmm_model.utf8";
-
-class ServerDemo: public IRequestHandler
+class ReqHandler: public IRequestHandler
 {
-	public:
-        ServerDemo(){};
-        virtual ~ServerDemo(){};
-		virtual bool init(){return _segment.init(DEFAULT_DICTPATH, DEFAULT_MODELPATH);};
-		virtual bool dispose(){return _segment.dispose();};
-	public:
+    public:
+        ReqHandler(const string& dictPath, const string& modelPath): _segment(dictPath.c_str(), modelPath.c_str()){};
+        virtual ~ReqHandler(){};
+        virtual bool init(){return _segment.init();};
+        virtual bool dispose(){return _segment.dispose();};
+    public:
         virtual bool do_GET(const HttpReqInfo& httpReq, string& strSnd)
         {
             string sentence, tmp;
@@ -38,26 +34,75 @@ class ServerDemo: public IRequestHandler
         MixSegment _segment;
 };
 
-int main(int argc,char* argv[])
+bool run(int argc, char** argv)
 {
-	if(argc != 7)
-	{
-		printf("usage: %s -n THREAD_NUMBER -p LISTEN_PORT -k start|stop\n",argv[0]);
-		return -1;
-	}
-    ArgvContext arg(argc, argv);
-    unsigned int port = atoi(arg["-p"].c_str());
-    unsigned int threadNum = atoi(arg["-n"].c_str());
+    if(argc < 2)
+    {
+        return false;
+    }
+    Config conf;
+    if(!conf.loadFile(argv[1]))
+    {
+        return false;
+    }
+    unsigned int port = 0;
+    unsigned int threadNum = 0; 
+    string dictPath;
+    string modelPath;
+    string val;
+    if(!conf.get("port", val))
+    {
+        LogFatal("conf get port failed.");
+        return false;
+    }
+    port = atoi(val.c_str());
+    if(!conf.get("thread_num", val))
+    {
+        LogFatal("conf get thread_num failed.");
+        return false;
+    }
+    threadNum = atoi(val.c_str());
 
-    ServerDemo s;
-    Daemon daemon(&s);
-    if(arg["-k"] == "start")
+    if(!conf.get("dict_path", dictPath))
     {
-        return !daemon.Start(port, threadNum);
+        LogFatal("conf get dict_path failed.");
+        return false;
     }
-    else
+    if(!conf.get("model_path", modelPath))
     {
-        return !daemon.Stop();
+        LogFatal("conf get model_path failed.");
+        return false;
     }
+    if(conf.get("daemonize", val) && "true" == val)
+    {
+        if(fork() > 0)
+          exit(0);
+        setsid();
+        if(!conf.get("pid_file", val))
+        {
+            LogFatal("conf get pid_file failed.");
+            return false;
+        }
+
+        int pid = getpid();
+        string pidStr = to_string(pid);
+        loadStr2File(val.c_str(), ios::out, pidStr);
+        LogInfo("write pid[%s] into file[%s]", pidStr.c_str(), val.c_str());
+        
+    }
+
+    ReqHandler reqHandler(dictPath, modelPath);
+    ServerFrame sf(port, threadNum, &reqHandler);
+    return sf.init() && sf.run();
+}
+
+int main(int argc, char* argv[])
+{
+    if(!run(argc, argv))
+    {
+        printf("usage: %s <config_file>\n", argv[0]);
+        return EXIT_FAILURE;
+    }
+    return EXIT_SUCCESS;
 }
 

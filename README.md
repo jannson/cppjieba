@@ -1,11 +1,12 @@
 #CppJieba是"结巴"中文分词的C++版本
 
+功能性的代码全写成hpp文件，此处的hpp文件是将cpp和h两个文件全都写在hpp文件里面（当然需要遵守相关约束）
+
+之所以全写成hpp文件，是因为这样在别的项目需要使用到中文分词功能的时候直接`#include"xx.hpp" `进来就可以使用，无需麻烦的链接。
+
 ## 中文编码
 
 现在支持utf8,gbk编码的分词。   
-
-- `master`分支支持`utf8`编码   
-- `gbk`分支支持`gbk`编码
 
 ## 安装与使用
 
@@ -17,15 +18,11 @@ unzip cppjieba-master.zip
 cd cppjieba-master
 mkdir build
 cd build
-cmake -DCMAKE_INSTALL_PREFIX=/usr ..
+cmake ..
+# 默认是utf8编码，如果要使用gbk编码则使用下句cmake命令
+# cmake .. -DENC=GBK
 make
 sudo make install
-```
-
-### 卸载
-```sh
-cd build/
-cat install_manifest.txt | sudo xargs rm -rf
 ```
 
 ### 使用Python调用CppJieba方法
@@ -40,38 +37,35 @@ cat install_manifest.txt | sudo xargs rm -rf
 
   * 更多请看：CppJiebaPy/README test/test_whoosh.py 
 
-
-### 验证
+#### 验证
 
 ```sh
-cd test/
-g++ -o segment.demo segment.cpp -L/usr/lib/CppJieba/ -lcppjieba
-./segment.demo # you will see the demo.
+/usr/bin/cjseg.sh ../test/testlines.utf8
 ```
 
-运行一下 `./server` 或 `./segment` 都会有对应的帮助文档显示。
-
-同时，如果想知道开发时如何使用`libcppjieba.a` 请看`test/segment.cpp`源代码即可。
-
-如果想知道如何搭建一个`cppjieba`中文分词的http服务请见 `test/server.cpp`源代码即可。
-
-若还有其他问题，欢迎`send mail`或者`open issue`。  :)
-
-### 搭建服务
+### 启动服务
 
 ```
-cd ./test
-g++ -o server server.cpp -L/usr/lib/CppJieba/ -L/usr/lib/CppJieba/Husky -lcppjieba -lhusky -lpthread
-./server -n 4 -p 11258 -k start >> run.log 2>&1 #启动服务，监听11258这个端口。
-./server -n 4 -p 11258 -k stop  #停止服务
+#Usage: /etc/init.d/cjserver {start|stop|restart|force-reload}
+#启动
+sudo /etc/init.d/cjserver start
+#停止
+sudo /etc/init.d/cjserver stop
 ```
 
 #### 验证服务
 
-然后用chrome浏览器打开`http://127.0.0.1:11258/?key=我来自北京邮电大学`
+然后用chrome浏览器打开`http://127.0.0.1:11200/?key=南京市长江大桥`
 (用chrome的原因是chrome的默认编码就是utf-8)
 
-或者用命令 `curl "http://127.0.0.1:11258/?key=我来自北京邮电大学"` (ubuntu中的curl安装命令`sudo apt-get install curl`)
+或者用命令 `curl "http://127.0.0.1:11200/?key=南京市长江大桥"` (ubuntu中的curl安装命令`sudo apt-get install curl`)
+
+
+### 卸载
+```sh
+cd build/
+cat install_manifest.txt | sudo xargs rm -rf
+```
 
 ## 分词效果
 
@@ -139,14 +133,14 @@ Output:
 核心目录，包含主要源代码。
 
 #### Trie树
-Trie.cpp/Trie.h 负责载入词典的trie树，主要供Segment模块使用。
+Trie.hpp 负责载入词典的trie树，主要供Segment模块使用。
 
 #### Segment模块
 
-MPSegment.cpp/MPSegment.h 
+MPSegment.hpp
 (Maximum Probability)最大概率法:负责根据Trie树构建有向无环图和进行动态规划算法，是分词算法的核心。
 
-HMMSegment.cpp/HMMSegment.h
+HMMSegment.hpp
 是根据HMM模型来进行分词，主要算法思路是根据(B,E,M,S)四个状态来代表每个字的隐藏状态。
 HMM模型由dicts/下面的`hmm_model.utf8`提供。
 分词算法即viterbi算法。
@@ -172,8 +166,8 @@ TransCode.cpp/TransCode.h 负责转换编码类型，将utf8和gbk转换成`uint
 
 ### MixSegment
 
-分词速度大概是 62M / 54sec = 1.15M/sec
-测试环境: `Intel(R) Xeon(R) CPU  E5506  @ 2.13GHz`
+分词速度大概是 = 2M/sec
+测试环境: `Intel(R) Xeon(R) CPU  E5506  @ 2.13GHz` 电脑下开的ubuntu虚拟机
 
 
 ## 联系客服
@@ -186,5 +180,4 @@ TransCode.cpp/TransCode.h 负责转换编码类型，将utf8和gbk转换成`uint
 https://github.com/fxsjy/jieba
 
 顾名思义，之所以叫CppJieba，是参照SunJunyi大神的Jieba分词Python程序写成的，所以饮水思源，再次感谢SunJunyi。
-
 

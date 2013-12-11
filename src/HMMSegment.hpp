@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <assert.h>
 #include <memory.h>
 #include "Limonp/str_functs.hpp"
 #include "Limonp/logger.hpp"
@@ -65,11 +66,7 @@ namespace CppJieba
         public:
             bool cut(Unicode::const_iterator begin, Unicode::const_iterator end, vector<Unicode>& res)const 
             {
-                if(!_getInitFlag())
-                {
-                    LogError("not inited.");
-                    return false;
-                }
+				assert(_getInitFlag());
                 vector<uint> status; 
                 if(!_viterbi(begin, end, status))
                 {
@@ -93,11 +90,7 @@ namespace CppJieba
         public:
             virtual bool cut(Unicode::const_iterator begin, Unicode::const_iterator end, vector<string>& res)const
             {
-                if(!_getInitFlag())
-                {
-                    LogError("not inited.");
-                    return false;
-                }
+				assert(_getInitFlag());
                 if(begin == end)
                 {
                     return false;

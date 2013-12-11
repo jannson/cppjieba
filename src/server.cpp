@@ -85,7 +85,7 @@ bool run(int argc, char** argv)
         }
 
         int pid = getpid();
-        string pidStr = to_string(pid);
+        string pidStr = to_string((long long)pid);
         loadStr2File(val.c_str(), ios::out, pidStr);
         LogInfo("write pid[%s] into file[%s]", pidStr.c_str(), val.c_str());
         

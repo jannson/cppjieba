@@ -7,6 +7,7 @@
 
 #include <algorithm>
 #include <set>
+#include <assert.h>
 #include "Limonp/logger.hpp"
 #include "Trie.hpp"
 #include "ISegment.hpp"
@@ -73,11 +74,7 @@ namespace CppJieba
         public:
             virtual bool cut(Unicode::const_iterator begin, Unicode::const_iterator end, vector<string>& res)const
             {
-                if(!_getInitFlag())
-                {
-                    LogError("not inited.");
-                    return false;
-                }
+				assert(_getInitFlag());
                 vector<TrieNodeInfo> segWordInfos;
                 if(!cut(begin, end, segWordInfos))
                 {
@@ -99,11 +96,7 @@ namespace CppJieba
             }
             bool cut(const string& str, vector<TrieNodeInfo>& segWordInfos)const
             {
-                if(!_getInitFlag())
-                {
-                    LogError("not inited.");
-                    return false;
-                }
+				assert(_getInitFlag());
                 if(str.empty())
                 {
                     return false;
@@ -120,11 +113,7 @@ namespace CppJieba
             }
             bool cut(Unicode::const_iterator begin , Unicode::const_iterator end, vector<TrieNodeInfo>& segWordInfos)const
             {
-                if(!_getInitFlag())
-                {
-                    LogError("not inited.");
-                    return false;
-                }
+				assert(_getInitFlag());
                 SegmentContext segContext;
 
                 //calc DAG

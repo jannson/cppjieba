@@ -1,24 +1,23 @@
-import os
+import os,sys
+#sys.argv.extend(['--compiler','g++'])
+#os.envirom["CXX"] = 'g++-xx'
+
 from distutils.core import setup, Extension
+from distutils import ccompiler
 
-ignores = ['server.cpp','segment.cpp']
 sources = ['cppjiebapy/mixsegment.i','cppjiebapy/mixsegment.cpp']
-paths = ['./src', './src/Limonp', './src/Husky']
 
-for p in paths:
-    for d in os.listdir(p):
-        f = os.path.join(p, d)
-        if os.path.isfile(f) and d.endswith(".cpp") and d not in ignores:
-            sources.append(f)
+#print ccompiler.show_compilers()
 
 module_jieba = Extension('_mixsegment',
                 sources,
                 language='c++',
                 swig_opts=['-c++'],
-                #define_macros = [('TEST', 1)],
-                #extra_compile_args=['-static'],
-                #extra_link_args=['-static'],
-                #include_dirs=['/usr/include/CppJieba', 'cppjieba'],
+                #undef_macros = ['g','O2'],
+                define_macros = [('NO_FILTER',None)],
+                extra_compile_args=['--std=c++0x','-O3'],
+                #extra_link_args=['-std=c++0x -O3'],
+                include_dirs=['/usr/include/CppJieba'],
                 #libraries=['cppjieba'],
                 #library_dirs=['/usr/lib/CppJieba']
                 )
